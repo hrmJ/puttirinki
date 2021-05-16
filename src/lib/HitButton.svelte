@@ -1,12 +1,19 @@
 <script lang="ts">
-	export let heading: string;
 	export let isPrimary: boolean;
 	import { CheckSquareIcon as CheckIcon, XIcon } from 'svelte-feather-icons';
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 </script>
 
-<button class={isPrimary ? 'primary' : ''}>
+<button
+	class={isPrimary ? 'primary' : ''}
+	on:click={() => {
+		console.log('frist hit!');
+		dispatch('hit');
+	}}
+>
 	{#if isPrimary}
-		<CheckIcon size="3x"/>
+		<CheckIcon size="3x" />
 	{:else}
 		<XIcon size="2x" />
 	{/if}
@@ -17,14 +24,14 @@
 		border: 0;
 		border-radius: 50%;
 		background: hsl(0, 0%, 70%);
-    color: white;
+		color: white;
 		font-family: -system-ui, sans-serif;
 		text-decoration: none;
 		padding: 1.2rem 1.2rem;
 		cursor: pointer;
 		font-size: 0.6em;
 		text-transform: uppercase;
-    box-shadow: 0 4px 6px hsla(0,0%,0%,.2);
+		box-shadow: 0 4px 6px hsla(0, 0%, 0%, 0.2);
 	}
 	.primary {
 		padding: 2.2rem 2.2rem;
