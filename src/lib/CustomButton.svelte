@@ -7,8 +7,7 @@
 	button {
 		border: 0;
 		border-radius: 0.25rem;
-		background: #1e88e5;
-		color: white;
+		background: hsl(0, 0%, 80%);
 		font-family: -system-ui, sans-serif;
 		font-size: 1rem;
 		line-height: 1.2;
