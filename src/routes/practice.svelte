@@ -13,14 +13,20 @@
 
 <div class="grid-container">
 	<div class="button-container topmiddle">
-		<HitButton on:hit={() => hitStore.addTop()} />
+		<HitButton on:hit={() => hitStore.addTop()} val={$hitStore.top} />
 	</div>
 	<div class="button-container centermiddle">
-		<HitButton isPrimary on:hit={() => hitStore.addHit()} />
+		<HitButton isPrimary on:hit={() => hitStore.addHit()} val={$hitStore.hit} />
 	</div>
-	<div class="button-container bottommiddle"><HitButton on:hit={() => hitStore.addBottom()} /></div>
-	<div class="button-container rightmiddle"><HitButton on:hit={() => hitStore.addRight()} /></div>
-	<div class="button-container leftmiddle"><HitButton on:hit={() => hitStore.addLeft()} /></div>
+	<div class="button-container bottommiddle">
+		<HitButton on:hit={() => hitStore.addBottom()} val={$hitStore.bottom} />
+	</div>
+	<div class="button-container rightmiddle">
+		<HitButton on:hit={() => hitStore.addRight()} val={$hitStore.right} />
+	</div>
+	<div class="button-container leftmiddle">
+		<HitButton on:hit={() => hitStore.addLeft()} val={$hitStore.left} />
+	</div>
 </div>
 
 <style type="text/css" media="screen">
