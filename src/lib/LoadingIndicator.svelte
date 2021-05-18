@@ -1,7 +1,13 @@
 <script lang="ts">
-	export let loading: boolean;
+	import { requestState } from '../apiCalls';
+	export let state: requestState;
+	export let message: string;
 </script>
 
-{#if loading === true}
-	<p>Odota hetki</p>
+
+{#if state === requestState.STARTED}
+	<p>Odota hetki...</p>
+{/if}
+{#if state === requestState.COMPLETE}
+	<p>{message || 'Tiedot tallennettu'}</p>
 {/if}

@@ -1,38 +1,59 @@
 <script lang="ts">
 	import HitButton from '../lib/HitButton.svelte';
+	import LoadingIndicator from '../lib/LoadingIndicator.svelte';
+	import CustomButton from '../lib/CustomButton.svelte';
 	import { hitStore } from '../hitStore';
+	import { requestState } from '../apiCalls';
 	let total = 0;
 	hitStore.subscribe((score) => {
 		total = Object.values(score).reduce((prev, cur) => prev + cur, 0);
 	});
+	let saveState: requestState = requestState.IDLE;
+	const saveSession = async () => {
+		saveState = requestState.STARTED;
+		saveState = await hitStore.saveSession();
+    console.log(saveState)
+    setTimeout(() => (saveState = requestState.IDLE), 3000);
+	};
 </script>
 
-<div>
-	{$hitStore.hit} / {total}
+<LoadingIndicator message="Setti tallennettu!" state={saveState} />
+<div class="grid-container">
+	{#if saveState !== requestState.STARTED}
+		<div class="button-container topmiddle">
+			<HitButton on:hit={() => hitStore.addTop()} val={$hitStore.top} />
+		</div>
+		<div class="button-container centermiddle">
+			<HitButton isPrimary on:hit={() => hitStore.addHit()} val={$hitStore.hit} />
+		</div>
+		<div class="button-container bottommiddle">
+			<HitButton on:hit={() => hitStore.addBottom()} val={$hitStore.bottom} />
+		</div>
+		<div class="button-container rightmiddle">
+			<HitButton on:hit={() => hitStore.addRight()} val={$hitStore.right} />
+		</div>
+		<div class="button-container leftmiddle">
+			<HitButton on:hit={() => hitStore.addLeft()} val={$hitStore.left} />
+		</div>
+	{/if}
 </div>
 
-<div class="grid-container">
-	<div class="button-container topmiddle">
-		<HitButton on:hit={() => hitStore.addTop()} val={$hitStore.top} />
-	</div>
-	<div class="button-container centermiddle">
-		<HitButton isPrimary on:hit={() => hitStore.addHit()} val={$hitStore.hit} />
-	</div>
-	<div class="button-container bottommiddle">
-		<HitButton on:hit={() => hitStore.addBottom()} val={$hitStore.bottom} />
-	</div>
-	<div class="button-container rightmiddle">
-		<HitButton on:hit={() => hitStore.addRight()} val={$hitStore.right} />
-	</div>
-	<div class="button-container leftmiddle">
-		<HitButton on:hit={() => hitStore.addLeft()} val={$hitStore.left} />
-	</div>
-</div>
+<nav>
+	<div>{$hitStore.hit} / {total}</div>
+	<div><CustomButton on:click={() => saveSession()}>Setti valmis!</CustomButton></div>
+</nav>
 
 <style type="text/css" media="screen">
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 2rem;
+	}
+
 	.grid-container {
 		display: grid;
-		height: 95vh;
+		height: calc(97vh - 2rem);
 		max-width: 680px;
 		margin: auto;
 		grid-template-columns: 25% 50% 25%;

@@ -1,7 +1,7 @@
 <script lang="ts">
 </script>
 
-<button><slot /></button>
+<button on:click><slot /></button>
 
 <style>
 	button {

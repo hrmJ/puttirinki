@@ -1,7 +1,6 @@
 <script lang="ts">
 	export let isPrimary: boolean;
 	export let val: number;
-	import { CheckSquareIcon as CheckIcon, XIcon } from 'svelte-feather-icons';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 </script>
@@ -14,11 +13,6 @@
 	}}
 >
 	{val}
-	{#if isPrimary}
-		<CheckIcon size="0.5x" />
-	{:else}
-		<XIcon size="0.5x" />
-	{/if}
 </button>
 
 <style>
