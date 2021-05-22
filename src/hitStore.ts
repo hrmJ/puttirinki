@@ -28,10 +28,8 @@ const saveSession = async (hits: hitStoreContent): Promise<requestState> => {
 			mode: 'cors',
 			body: JSON.stringify(hits)
 		});
-		console.log(resp);
 		return processResponse(resp);
 	} catch (error) {
-		console.log(error, 'haa');
 		return requestState.ERROR;
 	}
 };
