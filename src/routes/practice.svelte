@@ -12,7 +12,6 @@
 	const saveSession = async () => {
 		saveState = requestState.STARTED;
 		saveState = await hitStore.saveSession();
-    console.log(saveState)
     setTimeout(() => (saveState = requestState.IDLE), 3000);
 	};
 </script>
