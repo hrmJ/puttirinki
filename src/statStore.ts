@@ -38,7 +38,7 @@ const fetchStats = async (): Promise<SessionStats | null> => {
 	}
 };
 
-export const statsStore = readable(null, (set) => {
+export const stats = readable(null, (set) => {
 	fetchStats()
 		.then((resp) => set(resp))
 		.catch(() => set(null));
