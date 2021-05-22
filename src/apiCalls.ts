@@ -24,9 +24,17 @@ export const handleFetchError = (error: unknown): string => {
 	return 'unkown error when fetching data';
 };
 
+export const getResponseError = (resp: Response): null | string => {
+	if (resp.ok) {
+		return null;
+	}
+	return resp.statusText;
+};
+
 export const handleResponseOrErrorString = (resp: Response | string): handledResponse => {
 	if (typeof resp === 'string') {
 		return { state: requestState.ERROR, error: resp };
 	}
-	return { state: requestState.COMPLETE, error: null };
+	const ret = { state: processResponse(resp), error: getResponseError(resp) };
+	return ret;
 };
