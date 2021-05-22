@@ -1,8 +1,28 @@
-import { readable } from 'svelte/store';
+import { writable } from 'svelte/store';
 import type { SessionResponse, SessionStats } from './types';
+import { handleFetchError, handleResponseOrErrorString, requestState } from './apiCalls';
 
-const compileStats = async (resp: Response): Promise<SessionStats> => {
-	if (!resp.ok) {
+export type statStoreContent = {
+	data: SessionStats | null;
+	error: string | null;
+	state: requestState;
+};
+
+const defaultVal = {
+	error: null,
+	data: null,
+	state: requestState.IDLE
+};
+
+const { subscribe } = writable(<statStoreContent>{ ...defaultVal }, async (set) => {
+	set({ ...defaultVal, state: requestState.STARTED });
+	const resp = await fetchStats().catch(handleFetchError);
+	set({ data: await compileStats(resp), ...handleResponseOrErrorString(resp) });
+	return () => null;
+});
+
+const compileStats = async (resp: Response | string): Promise<SessionStats> => {
+	if (typeof resp === 'string' || !resp.ok) {
 		return null;
 	}
 	const sessionResponse: SessionResponse = await resp.json();
@@ -22,25 +42,17 @@ const compileStats = async (resp: Response): Promise<SessionStats> => {
 	);
 };
 
-const fetchStats = async (): Promise<SessionStats | null> => {
-	try {
-		const url = `http://${import.meta.env.VITE_API_URL}/practiceSessions`;
-		const resp = await fetch(url, {
-			headers: {
-				'content-type': 'application/json',
-				Authorization: 'Bearer' + localStorage.getItem('accessToken')
-			},
-			mode: 'cors'
-		});
-		return await compileStats(resp);
-	} catch (error) {
-		return null;
-	}
+const fetchStats = async (): Promise<Response> => {
+	const url = `http://${import.meta.env.VITE_API_URL}/practiceSessions`;
+	return await fetch(url, {
+		headers: {
+			'content-type': 'application/json'
+			//Authorization: 'Bearer' + localStorage.getItem('accessToken')
+		},
+		mode: 'cors'
+	});
 };
 
-export const stats = readable(null, (set) => {
-	fetchStats()
-		.then((resp) => set(resp))
-		.catch(() => set(null));
-	return () => null;
-});
+export const stats = {
+	subscribe
+};
