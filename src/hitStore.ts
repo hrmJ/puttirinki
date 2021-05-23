@@ -23,7 +23,10 @@ const saveSession = async (hits: hitStoreContent): Promise<requestState> => {
 	try {
 		const url = `http://${import.meta.env.VITE_API_URL}/practiceSessions`;
 		const resp = await fetch(url, {
-			headers: { 'content-type': 'application/json' },
+			headers: {
+				'content-type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+			},
 			method: 'POST',
 			mode: 'cors',
 			body: JSON.stringify(hits)
