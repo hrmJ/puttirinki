@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { SessionResponse, SessionStats } from './types';
+import type { SessionStats } from './types';
 import { handleFetchError, handleResponseOrErrorString, requestState } from './apiCalls';
 
 export type statStoreContent = {
@@ -12,21 +12,8 @@ const compileStats = async (resp: Response | string): Promise<SessionStats> => {
 	if (typeof resp === 'string' || !resp.ok) {
 		return null;
 	}
-	const sessionResponse: SessionResponse = await resp.json();
-	return sessionResponse.data.reduce(
-		(prev, cur) => {
-			return {
-				hit: prev.hit + cur.hit,
-				left: prev.left + cur.left,
-				right: prev.right + cur.right,
-				top: prev.top + cur.top,
-				bottom: prev.bottom + cur.bottom,
-				total: prev.total + cur.hit + cur.left + cur.right + cur.top + cur.bottom,
-				sessionCount: prev.sessionCount + 1
-			};
-		},
-		{ hit: 0, left: 0, right: 0, total: 0, top: 0, bottom: 0, sessionCount: 0 }
-	);
+	const sessionResponse: SessionStats = await resp.json();
+	return sessionResponse;
 };
 
 const fetchStats = async (): Promise<Response> => {
@@ -42,7 +29,9 @@ const fetchStats = async (): Promise<Response> => {
 
 const initializeStore = async () => {
 	const resp = await fetchStats().catch(handleFetchError);
-	return { data: await compileStats(resp), ...handleResponseOrErrorString(resp) };
+	const ret = { data: await compileStats(resp), ...handleResponseOrErrorString(resp) };
+	console.log(ret);
+	return ret;
 };
 
 export const statsStore = writable(initializeStore());
