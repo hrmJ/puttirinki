@@ -52,9 +52,9 @@
 
 	.grid-container {
 		display: grid;
-		height: calc(97vh - 2rem);
+		height: calc(97vh - 2rem - 2rem);
 		max-width: 680px;
-		margin: auto;
+		margin: 3rem auto;
 		grid-template-columns: 25% 50% 25%;
 		grid-template-rows: 1fr 1fr 1fr;
 		gap: 0px 0px;

@@ -2,10 +2,6 @@ export type feathersAuthResponse = {
 	accessToken: string;
 };
 
-export const storeToken = (tokenVal: string): void => {
-	sessionStorage.setItem('user_token', tokenVal);
-};
-
 const authenticateByResponse = async (resp: Response): Promise<boolean> => {
 	if (!resp.ok) {
 		return false;
@@ -31,4 +27,8 @@ export const setAuthToken = async (email: string, password: string): Promise<boo
 		console.log('NETWORK ERROR', error);
 	}
 	return false;
+};
+
+export const hasAuthToken = (): boolean => {
+	return !(localStorage.getItem('accessToken') === null);
 };

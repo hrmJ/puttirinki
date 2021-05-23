@@ -3,13 +3,14 @@
 	import { requestState } from '../apiCalls';
 </script>
 
+
 {#await $statsStore}
 	<p>Ladataan tilastoja...</p>
 {:then stats}
 	{#if stats.state === requestState.COMPLETE}
 		<p>
-			Morjes, Nunnunuuu, olet heittänyt yhteensä {stats.data.sessionCount} settiä, ja kaikkiaan heittoja
-			on tullut {stats.data.total}!
+			Olet heittänyt yhteensä {stats.data.sessionCount} settiä. Kaikkiaan heittoja on kasassa {stats
+				.data.total}!
 		</p>
 
 		<ul>

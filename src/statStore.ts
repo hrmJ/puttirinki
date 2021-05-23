@@ -30,7 +30,6 @@ const fetchStats = async (): Promise<Response> => {
 const initializeStore = async () => {
 	const resp = await fetchStats().catch(handleFetchError);
 	const ret = { data: await compileStats(resp), ...handleResponseOrErrorString(resp) };
-	console.log(ret);
 	return ret;
 };
 
