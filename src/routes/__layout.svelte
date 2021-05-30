@@ -18,7 +18,7 @@
 	>
 </div>
 <header>
-	{$hitStore.hit} / {total}
+	<p>{$hitStore.hit} / {total}</p>
 </header>
 <nav class={showNav ? 'open' : ''}>
 	<ul>
@@ -38,20 +38,24 @@
 <style>
 	.menu-launcher {
 		position: absolute;
-		top: 0.5rem;
-		left: 1em;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		top: 0;
+		left: 0.5em;
 		z-index: 99;
+    height: 3rem;
 	}
 	header {
 		width: 100vw;
 		margin: 0em;
 		background: hsl(0, 0%, 40%);
-		padding: 0 0 0 2em;
+		padding: 0 0 0 3rem;
 		height: 3rem;
 		overflow: hidden;
 		color: white;
-    display: flex;
-    align-items: center;
+		display: flex;
+		align-items: center;
 	}
 	nav {
 		background: hsl(2, 0%, 70%);
