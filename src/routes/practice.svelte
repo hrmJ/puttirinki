@@ -13,7 +13,7 @@
 </script>
 
 <LoadingIndicator message="Setti tallennettu!" state={saveState} />
-<div class="grid-container">
+<main class="grid-container">
 	{#if saveState !== requestState.STARTED}
 		<div class="button-container topmiddle">
 			<HitButton on:hit={() => hitStore.addTop()} val={$hitStore.top} />
@@ -31,7 +31,7 @@
 			<HitButton on:hit={() => hitStore.addLeft()} val={$hitStore.left} />
 		</div>
 	{/if}
-</div>
+</main>
 
 <nav>
 	<div class="chunky">
