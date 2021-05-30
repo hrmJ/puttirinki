@@ -51,7 +51,7 @@ export const hitStore = {
 	saveSession: async (): Promise<requestState> => {
 		const resp = await saveSession(currentHits);
 		statsStore.update(initializeStore);
-		set({ ...defaultVal });
+		set({ ...defaultVal, showStats: true });
 		return resp;
 	}
 };

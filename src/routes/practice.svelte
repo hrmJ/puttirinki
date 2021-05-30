@@ -45,7 +45,7 @@
 
 <style type="text/css" media="screen">
 	.message {
-		padding: var(--padding-md);
+		padding: var(--padding-sm);
     font-weight: var(--weight-light);
     font-size: var(--font-sm-2);
     display: flex;
@@ -55,7 +55,7 @@
 		position: absolute;
 		z-index: 199;
 		top: 9px;
-		left: 5px;
+		right: 5px;
 		box-shadow: var(--shadow-sm);
 		opacity: 0;
 		transition: opacity 0.2s linear;
