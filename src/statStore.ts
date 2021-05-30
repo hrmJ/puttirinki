@@ -27,7 +27,7 @@ const fetchStats = async (): Promise<Response> => {
 	});
 };
 
-const initializeStore = async () => {
+export const initializeStore = async (): Promise<statStoreContent> => {
 	const resp = await fetchStats().catch(handleFetchError);
 	const ret = { data: await compileStats(resp), ...handleResponseOrErrorString(resp) };
 	return ret;

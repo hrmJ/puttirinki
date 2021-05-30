@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import { processResponse, requestState } from './apiCalls';
+import { initializeStore, statsStore } from './statStore';
 
 export type hitStoreContent = {
 	right: number;
@@ -7,6 +8,7 @@ export type hitStoreContent = {
 	top: number;
 	bottom: number;
 	hit: number;
+	showStats: boolean;
 };
 
 const defaultVal = {
@@ -14,7 +16,8 @@ const defaultVal = {
 	left: 0,
 	top: 0,
 	bottom: 0,
-	hit: 0
+	hit: 0,
+	showStats: false
 };
 
 const { subscribe, update, set } = writable({ ...defaultVal } as hitStoreContent);
@@ -44,8 +47,10 @@ export const hitStore = {
 	addTop: (): void => update((hits) => ({ ...hits, top: hits.top + 1 })),
 	addBottom: (): void => update((hits) => ({ ...hits, bottom: hits.bottom + 1 })),
 	addHit: (): void => update((hits) => ({ ...hits, hit: hits.hit + 1 })),
+	toggleStats: (showStats: boolean): void => update((hits) => ({ ...hits, showStats })),
 	saveSession: async (): Promise<requestState> => {
 		const resp = await saveSession(currentHits);
+		statsStore.update(initializeStore);
 		set({ ...defaultVal });
 		return resp;
 	}

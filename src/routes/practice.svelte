@@ -4,16 +4,20 @@
 	import CustomButton from '../lib/CustomButton.svelte';
 	import { hitStore } from '../hitStore';
 	import { requestState } from '../apiCalls';
+	import { onMount } from 'svelte';
 	let saveState: requestState = requestState.IDLE;
 	const saveSession = async () => {
 		saveState = requestState.STARTED;
 		saveState = await hitStore.saveSession();
 		setTimeout(() => (saveState = requestState.IDLE), 3000);
 	};
+	onMount(() => hitStore.toggleStats(true));
 </script>
 
-<LoadingIndicator message="Setti tallennettu!" state={saveState} />
 <main class="grid-container">
+	<article class={saveState === requestState.IDLE ? 'message' : 'message' + ' open'}>
+		<LoadingIndicator message="Setti tallennettu!" state={saveState} />
+	</article>
 	{#if saveState !== requestState.STARTED}
 		<div class="button-container topmiddle">
 			<HitButton on:hit={() => hitStore.addTop()} val={$hitStore.top} />
@@ -40,6 +44,27 @@
 </nav>
 
 <style type="text/css" media="screen">
+	.message {
+		padding: var(--padding-md);
+    font-weight: var(--weight-light);
+    font-size: var(--font-sm-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+		background: lightgrey;
+		position: absolute;
+		z-index: 199;
+		top: 9px;
+		left: 5px;
+		box-shadow: var(--shadow-sm);
+		opacity: 0;
+		transition: opacity 0.2s linear;
+    border-radius: 7px;
+	}
+	.open {
+		opacity: 1;
+		width: 70vw;
+	}
 
 	nav {
 		position: fixed;

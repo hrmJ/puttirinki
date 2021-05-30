@@ -21,6 +21,8 @@
   --padding-lg: 12px 16px;
   --padding-xl: 15px 30px;
 
+  --shadow-sm: 0 1px 3px hsla(0, 0%, 0%, .2);
+
 }
 
 body {

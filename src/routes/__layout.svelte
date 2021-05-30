@@ -4,7 +4,9 @@
 	import { hitStore } from '../hitStore';
 	let total = 0;
 	hitStore.subscribe((score) => {
-		total = Object.values(score).reduce((prev, cur) => prev + cur, 0);
+		total = Object.entries(score)
+			.filter(([key, val]) => key !== 'showStats')
+			.reduce((prev, cur) => prev + cur[1], 0);
 	});
 	let showNav = false;
 	const toggleNav = () => {
@@ -18,7 +20,9 @@
 	>
 </div>
 <header>
-	<p>{$hitStore.hit} / {total}</p>
+	{#if $hitStore.showStats}
+		<p>{$hitStore.hit} / {total}</p>
+	{/if}
 </header>
 <nav class={showNav ? 'open' : ''}>
 	<ul>
@@ -44,7 +48,7 @@
 		top: 0;
 		left: 0.5em;
 		z-index: 99;
-    height: 3rem;
+		height: 3rem;
 	}
 	header {
 		width: 100vw;
@@ -68,6 +72,7 @@
 		left: 0;
 		padding: 3.5rem 0em 0em 1em;
 		transition: width 0.2s linear;
+    z-index: 2;
 	}
 	.open {
 		opacity: 1;
