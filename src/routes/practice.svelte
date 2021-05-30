@@ -4,15 +4,11 @@
 	import CustomButton from '../lib/CustomButton.svelte';
 	import { hitStore } from '../hitStore';
 	import { requestState } from '../apiCalls';
-	let total = 0;
-	hitStore.subscribe((score) => {
-		total = Object.values(score).reduce((prev, cur) => prev + cur, 0);
-	});
 	let saveState: requestState = requestState.IDLE;
 	const saveSession = async () => {
 		saveState = requestState.STARTED;
 		saveState = await hitStore.saveSession();
-    setTimeout(() => (saveState = requestState.IDLE), 3000);
+		setTimeout(() => (saveState = requestState.IDLE), 3000);
 	};
 </script>
 
@@ -38,12 +34,17 @@
 </div>
 
 <nav>
-	<div>{$hitStore.hit} / {total}</div>
-	<div><CustomButton on:click={() => saveSession()}>Setti valmis!</CustomButton></div>
+	<div class="chunky">
+		<CustomButton customClass="chunky" on:click={() => saveSession()}>Setti valmis!</CustomButton>
+	</div>
 </nav>
 
 <style type="text/css" media="screen">
+
 	nav {
+		position: fixed;
+		bottom: 15px;
+		right: 5px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -52,9 +53,9 @@
 
 	.grid-container {
 		display: grid;
-		height: calc(97vh - 2rem - 2rem);
+		height: calc(97vh - 2rem - 5rem);
 		max-width: 680px;
-		margin: 3rem auto;
+		margin: auto;
 		grid-template-columns: 25% 50% 25%;
 		grid-template-rows: 1fr 1fr 1fr;
 		gap: 0px 0px;

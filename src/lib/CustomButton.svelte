@@ -1,8 +1,8 @@
 <script lang="ts">
-	export let noOutline = false;
+	export let customClass: string;
 </script>
 
-<button on:click class={noOutline ? 'no-outline' : ''}><slot /></button>
+<button on:click class={customClass}><slot /></button>
 
 <style>
 	button {
@@ -30,5 +30,11 @@
 		padding: 0;
 		margin: 0;
 		cursor: pointer;
+	}
+
+	.chunky {
+		border-radius: 9px;
+		padding: 1em;
+    font-size: 0.8rem;
 	}
 </style>
