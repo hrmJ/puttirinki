@@ -33,7 +33,7 @@
 	}
 
 	.chunky {
-		border-radius: 7px;
+		border-radius: 2px;
 		padding: 1em;
     font-size: 0.8rem;
 	}

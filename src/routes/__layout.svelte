@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { UserSolidCircleIcon, RadarIcon, MenuIcon } from 'svelte-zondicons';
+	import { UserSolidCircleIcon, RadarIcon, MenuIcon, StandByIcon } from 'svelte-zondicons';
 	import CustomButton from '../lib/CustomButton.svelte';
 	import { hitStore } from '../hitStore';
+	import { authStore } from '../auth';
 	let total = 0;
 	hitStore.subscribe((score) => {
 		total = Object.entries(score)
@@ -25,6 +26,7 @@
 	{/if}
 </header>
 <nav class={showNav ? 'open' : ''}>
+	<p class="user-details">Tervetuloa, {$authStore.user.name}!</p>
 	<ul>
 		<li>
 			<UserSolidCircleIcon color="white" />
@@ -34,12 +36,20 @@
 			<RadarIcon color="white" />
 			<a href="practice" on:click={toggleNav}>Treeni</a>
 		</li>
+		<li>
+			<StandByIcon color="white" />
+			<a href="practice" on:click={toggleNav}>Kirjaudu ulos</a>
+		</li>
 	</ul>
 </nav>
 
 <slot />
 
 <style>
+  .user-details{
+    margin-bottom: 2rem;
+    margin-top: 0.3rem;
+  }
 	.menu-launcher {
 		position: absolute;
 		display: flex;
@@ -68,11 +78,12 @@
 		position: fixed;
 		top: 0rem;
 		max-width: 300px;
-		height: 100vh;
+		height: calc(100vh - 3.5rem);
 		left: 0;
-		padding: 3.5rem 0em 0em 1em;
+		padding: 3.3rem 0em 0em 1em;
 		transition: width 0.2s linear;
-    z-index: 2;
+		z-index: 2;
+		color: white;
 	}
 	.open {
 		opacity: 1;

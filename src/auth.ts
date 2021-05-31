@@ -1,3 +1,5 @@
+import { writable } from 'svelte/store';
+
 export type feathersAuthResponse = {
 	accessToken: string;
 };
@@ -32,3 +34,13 @@ export const setAuthToken = async (email: string, password: string): Promise<boo
 export const hasAuthToken = (): boolean => {
 	return !(localStorage.getItem('accessToken') === null);
 };
+
+const setUser = () => {
+	const getUserRequestFailed = false;
+	if (getUserRequestFailed) {
+		//route goto login
+	}
+	return { user: { name: 'mr. TODO ' } };
+};
+
+export const authStore = writable(setUser());

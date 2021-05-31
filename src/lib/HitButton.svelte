@@ -8,7 +8,6 @@
 <button
 	class={isPrimary ? 'primary' : ''}
 	on:click={() => {
-		console.log('frist hit!');
 		dispatch('hit');
 	}}
 >

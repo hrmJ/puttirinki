@@ -59,7 +59,7 @@
 		box-shadow: var(--shadow-sm);
 		opacity: 0;
 		transition: opacity 0.2s linear;
-    border-radius: 7px;
+    border-radius: 2px;
 	}
 	.open {
 		opacity: 1;

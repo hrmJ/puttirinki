@@ -16,6 +16,14 @@ module.exports = {
 			routes: 'src/routes',
 			serviceWorker: 'src/service-worker',
 			template: 'src/app.html'
+		},
+		vite: {
+			server: {
+				hmr: {
+					protocol: 'ws',
+					port: 3001
+				}
+			}
 		}
 	}
 };
