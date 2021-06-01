@@ -35,6 +35,6 @@
 	.chunky {
 		border-radius: 2px;
 		padding: 1em;
-    font-size: 0.8rem;
+		font-size: 0.8rem;
 	}
 </style>

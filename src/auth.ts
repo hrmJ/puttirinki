@@ -1,15 +1,13 @@
 import { writable } from 'svelte/store';
-
-export type feathersAuthResponse = {
-	accessToken: string;
-};
+import type { AuthResponse, User } from './types';
 
 const authenticateByResponse = async (resp: Response): Promise<boolean> => {
 	if (!resp.ok) {
 		return false;
 	}
-	const json: feathersAuthResponse = await resp.json();
+	const json: AuthResponse = await resp.json();
 	localStorage.setItem('accessToken', json.accessToken);
+	localStorage.setItem('userID', json.user._id);
 	return true;
 };
 
@@ -31,16 +29,47 @@ export const setAuthToken = async (email: string, password: string): Promise<boo
 	return false;
 };
 
+const processUserResponse = (
+	resp: Response,
+	user: Pick<User, '_id' | 'name'> | null
+): Pick<User, '_id' | 'name'> | null => {
+	if (!resp.ok) {
+		return null;
+	}
+	return user;
+};
+
+const getCurrentUserDetails = async (): Promise<Pick<User, '_id' | 'name'> | null> => {
+	const id = localStorage.getItem('userID');
+	let resp: Response | null;
+	let user: Pick<User, '_id' | 'name'> | null;
+	try {
+		const url = `http://${import.meta.env.VITE_API_URL}/users/${id}`;
+		resp = await fetch(url, {
+			headers: {
+				'content-type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+			},
+			mode: 'cors'
+		});
+		user = await resp.json();
+	} catch (error) {
+		user = null;
+		resp = null;
+	}
+	return processUserResponse(resp, user);
+};
+
 export const hasAuthToken = (): boolean => {
 	return !(localStorage.getItem('accessToken') === null);
 };
 
-const setUser = () => {
-	const getUserRequestFailed = false;
-	if (getUserRequestFailed) {
-		//route goto login
+export const setUser = async () => {
+	const userDetails = await getCurrentUserDetails();
+	if (!userDetails) {
+		return null;
 	}
-	return { user: { name: 'mr. TODO ' } };
+	return { ...userDetails };
 };
 
 export const authStore = writable(setUser());

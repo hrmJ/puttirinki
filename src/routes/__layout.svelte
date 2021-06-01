@@ -1,13 +1,22 @@
 <script lang="ts">
-	import { UserSolidCircleIcon, RadarIcon, MenuIcon, StandByIcon } from 'svelte-zondicons';
+	import { MenuIcon } from 'svelte-zondicons';
 	import CustomButton from '../lib/CustomButton.svelte';
 	import { hitStore } from '../hitStore';
 	import { authStore } from '../auth';
+	import type { User } from 'src/types';
+	import GlobalNav from '$lib/GlobalNav.svelte';
+	import Login from '$lib/login.svelte';
+	import LoadingIndicator from '$lib/LoadingIndicator.svelte';
+	import { debug } from 'svelte/internal';
 	let total = 0;
+	let user: Pick<User, '_id' | 'name'> | null;
 	hitStore.subscribe((score) => {
 		total = Object.entries(score)
 			.filter(([key, val]) => key !== 'showStats')
-			.reduce((prev, cur) => prev + cur[1], 0);
+			.reduce((prev, cur) => prev + (cur[1] as number), 0);
+	});
+	authStore.subscribe(async (userPromise) => {
+		user = await userPromise;
 	});
 	let showNav = false;
 	const toggleNav = () => {
@@ -15,41 +24,29 @@
 	};
 </script>
 
-<div class="menu-launcher">
+<div class={'menu-launcher ' + (user  == null ? 'hide' : '')}>
 	<CustomButton customClass="no-outline" on:click={toggleNav}
 		><MenuIcon color="white" /></CustomButton
 	>
 </div>
 <header>
-	{#if $hitStore.showStats}
+	{#if $hitStore.showStats && user !== null}
 		<p>{$hitStore.hit} / {total}</p>
 	{/if}
+	<GlobalNav {toggleNav} {showNav} {user} />
 </header>
-<nav class={showNav ? 'open' : ''}>
-	<p class="user-details">Tervetuloa, {$authStore.user.name}!</p>
-	<ul>
-		<li>
-			<UserSolidCircleIcon color="white" />
-			<a href="dashboard" on:click={toggleNav}>Tilastot</a>
-		</li>
-		<li>
-			<RadarIcon color="white" />
-			<a href="practice" on:click={toggleNav}>Treeni</a>
-		</li>
-		<li>
-			<StandByIcon color="white" />
-			<a href="practice" on:click={toggleNav}>Kirjaudu ulos</a>
-		</li>
-	</ul>
-</nav>
-
-<slot />
+{#if user === undefined}
+	<LoadingIndicator show />
+{:else if user === null}
+	<Login />
+{:else}
+	<slot />
+{/if}
 
 <style>
-  .user-details{
-    margin-bottom: 2rem;
-    margin-top: 0.3rem;
-  }
+	div.menu-launcher.hide {
+		display: none;
+	}
 	.menu-launcher {
 		position: absolute;
 		display: flex;
@@ -70,49 +67,5 @@
 		color: white;
 		display: flex;
 		align-items: center;
-	}
-	nav {
-		background: hsl(2, 0%, 70%);
-		opacity: 0;
-		width: 0;
-		position: fixed;
-		top: 0rem;
-		max-width: 300px;
-		height: calc(100vh - 3.5rem);
-		left: 0;
-		padding: 3.3rem 0em 0em 1em;
-		transition: width 0.2s linear;
-		z-index: 2;
-		color: white;
-	}
-	.open {
-		opacity: 1;
-		width: 70vw;
-	}
-
-	ul {
-		display: flex;
-		align-items: flex-start;
-		flex-flow: column nowrap;
-		list-style-type: none;
-		margin-left: 0;
-		margin-top: 0;
-		padding-left: 0;
-	}
-	li > a {
-		margin-left: 0.6em;
-	}
-	li {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	li + li {
-		margin-top: 2em;
-	}
-	a,
-	a:active,
-	a:visited {
-		color: white;
 	}
 </style>

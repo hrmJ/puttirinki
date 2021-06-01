@@ -2,8 +2,7 @@
 	import CustomButton from '../lib/CustomButton.svelte';
 	import LoadingIndicator from '../lib/LoadingIndicator.svelte';
 	import LoginOkIndicator from '../lib/LoginOkIndicator.svelte';
-	import { setAuthToken } from '../auth';
-	import { goto } from '$app/navigation';
+	import { setAuthToken, authStore, setUser } from '../auth';
 	const processlogin = async (tokenOk: boolean): Promise<void> => {
 		if (!tokenOk) {
 			loading = false;
@@ -11,8 +10,8 @@
 			return null;
 		}
 		loginOk = true;
-		await goto('/practice');
 		loading = false;
+		authStore.update(setUser);
 	};
 	const login = async (): Promise<void> => {
 		loading = true;
@@ -28,8 +27,8 @@
 <article>
 	<h1>Ja eikun puttailemaan!</h1>
 
-	<LoginOkIndicator {loginOk} {loading}/>
-	<LoadingIndicator {loading} />
+	<LoginOkIndicator {loginOk} {loading} />
+	<LoadingIndicator show={loading} />
 
 	<form on:submit|preventDefault={login}>
 		<p>
