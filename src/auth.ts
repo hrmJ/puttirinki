@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { processResponse, requestState } from './apiCalls';
 import type { AuthResponse, User } from './types';
 
 const authenticateByResponse = async (resp: Response): Promise<boolean> => {
@@ -27,6 +28,28 @@ export const setAuthToken = async (email: string, password: string): Promise<boo
 		console.log('NETWORK ERROR', error);
 	}
 	return false;
+};
+
+export const submitSignUp = async (
+	username: string,
+	password: string,
+	email: string
+): Promise<requestState> => {
+	try {
+		const url = `http://${import.meta.env.VITE_API_URL}/users`;
+		const resp = await fetch(url, {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'content-type': 'application/json'
+			},
+			body: JSON.stringify({ strategy: 'local', email, password, username })
+		});
+		return processResponse(resp);
+	} catch (error) {
+		console.log('NETWORK ERROR', error);
+	}
+	return requestState.ERROR;
 };
 
 const processUserResponse = (

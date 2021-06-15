@@ -1,3 +1,10 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+
+
+}
 
 :root{
   --font-sm-1: 12px;
@@ -22,6 +29,19 @@
   --padding-xl: 15px 30px;
 
   --shadow-sm: 0 1px 3px hsla(0, 0%, 0%, .2);
+
+
+  --input-border: #8b8a8b;
+  --input-focus-h: 245;
+  --input-focus-s: 100%;
+  --input-focus-l: 42%;
+
+
+  --border-radius-1: 2px;
+  --border-radius-2: 4px;
+  --border-radius-3: 7px;
+
+
 
 }
 
