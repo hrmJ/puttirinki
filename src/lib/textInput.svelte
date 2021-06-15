@@ -3,30 +3,62 @@
 		PASSWORD = 'password',
 		EMAIL = 'email'
 	}
+	export type validatorFunction = () => string;
 </script>
 
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	export let name: string;
-	export let validationErrors: string[];
 	export let value: string;
 	export let customType: inputType;
+	export let validators: validatorFunction[] = [];
+	let validationErrors: string[] = [];
+	const dispatch = createEventDispatcher();
+	const reportErrors = (errors: string[]) => {
+		dispatch('updateValidation', { hasErrors: Boolean(errors.length), name });
+	};
+	const validate = async () => {
+		validationErrors = validators.map((validator) => validator()).filter(Boolean);
+		reportErrors(validationErrors);
+	};
 </script>
 
 <article>
 	<label for={name + '-field'}><slot /></label>
 	{#if customType === inputType.PASSWORD}
-		<input id={name + '-field'} {name} type="password" bind:value />
+		<input id={name + '-field'} {name} type="password" bind:value on:blur={validate} />
 	{:else if customType === inputType.EMAIL}
-		<input id={name + '-field'} {name} type="email" bind:value />
+		<input id={name + '-field'} {name} type="email" bind:value on:blur={validate} />
 	{:else}
-		<input id={name + '-field'} {name} type="text" bind:value autocomplete="off" />
+		<input
+			id={name + '-field'}
+			{name}
+			type="text"
+			bind:value
+			autocomplete="off"
+			on:blur={validate}
+		/>
 	{/if}
-	<p class="validation-errors">{validationErrors ? validationErrors.join(',') : ''}</p>
+	<ul>
+		{#each validationErrors as err}
+			<li class="validation-errors">{err}</li>
+		{/each}
+	</ul>
 </article>
 
 <style>
 	label {
 		display: block;
+	}
+	input {
+		margin-top: var(--margin-sm);
+	}
+	ul {
+		margin: 0;
+    margin-top: var(--margin-md);
+	}
+	li + li {
+		margin-top: var(--margin-sm);
 	}
 	input {
 		width: 100%;
@@ -44,7 +76,7 @@
 		outline: 3px solid transparent;
 	}
 	.validation-errors {
-		font-size: var(--font-sm-1);
+		font-size: var(--font-sm-0);
 	}
 
 	/*input:focus {*/

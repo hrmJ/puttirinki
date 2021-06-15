@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 import { processResponse, requestState } from './apiCalls';
-import type { AuthResponse, User } from './types';
+import type { AuthResponse, signupData, User } from './types';
 
 const authenticateByResponse = async (resp: Response): Promise<boolean> => {
 	if (!resp.ok) {
@@ -30,11 +30,9 @@ export const setAuthToken = async (email: string, password: string): Promise<boo
 	return false;
 };
 
-export const submitSignUp = async (
-	username: string,
-	password: string,
-	email: string
-): Promise<requestState> => {
+export const submitSignUp = async (signupData: signupData): Promise<requestState> => {
+	console.log(signupData, 'hallo');
+	return null;
 	try {
 		const url = `http://${import.meta.env.VITE_API_URL}/users`;
 		const resp = await fetch(url, {
@@ -43,7 +41,7 @@ export const submitSignUp = async (
 			headers: {
 				'content-type': 'application/json'
 			},
-			body: JSON.stringify({ strategy: 'local', email, password, username })
+			body: JSON.stringify(signupData)
 		});
 		return processResponse(resp);
 	} catch (error) {

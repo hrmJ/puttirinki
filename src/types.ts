@@ -54,3 +54,10 @@ export interface User {
 	updatedAt: Date;
 	__v: number;
 }
+
+export interface signupData {
+	password: string;
+	passwordConfirmation: string;
+	username: string;
+	email: string;
+}

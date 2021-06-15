@@ -2,11 +2,20 @@
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+* + * {
+  margin-top: 1em;
+}
 
 
+ul{
+  list-style-type: none;
+  padding-left: 0;
 }
 
 :root{
+  --font-sm-0: 10px;
   --font-sm-1: 12px;
   --font-sm-2: 14px;
   --font-sm-3: 16px;
@@ -22,6 +31,11 @@
 
   --weight-light: 400;
   --weight-bold: 600;
+
+  --margin-sm: 2px;
+  --margin-md: 6px;
+  --margin-lg: 8px;
+  --margin-xl: 13px;
 
   --padding-sm: 6px 8px;
   --padding-md: 8px 10px;

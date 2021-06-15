@@ -1,18 +1,10 @@
-<script lang="ts" context="module">
-	type signupData = {
-		password: string;
-		passwordConfirmation: string;
-		username: string;
-		email: string;
-	};
-</script>
-
 <script lang="ts">
 	import CustomButton from '../lib/CustomButton.svelte';
 	import LoadingIndicator from '../lib/LoadingIndicator.svelte';
 	import LoginOkIndicator from '../lib/LoginOkIndicator.svelte';
 	import { setAuthToken, authStore, setUser, submitSignUp } from '../auth';
 	import TextInput, { inputType } from './textInput.svelte';
+	import type { signupData } from '../types';
 	const processlogin = async (tokenOk: boolean): Promise<void> => {
 		if (!tokenOk) {
 			loading = false;
@@ -30,19 +22,10 @@
 		processlogin(tokenOk);
 	};
 
-	const validateSignup = async (data: signupData) => {
-		validationErros = Object.entries(data).reduce(
-			(allErrors, [field, val]) => ({
-				...allErrors,
-				[field]:
-					field in validators ? validators[field].map((thisValidator) => thisValidator()) : null
-			}),
-			{ passwordConfirmation: [] }
-		);
-		const hasErrors = Object.values(validationErros).some(
-			(val: [] | null) => val && val.some(Boolean)
-		);
-		console.log(hasErrors, validationErros);
+	const validationErrors = {};
+
+	const setValidationState = ({ hasErrors, name }) => {
+		validationErrors[name] = hasErrors;
 	};
 
 	const signupData: signupData = {
@@ -54,14 +37,14 @@
 
 	let validators = {
 		passwordConfirmation: [
-			() => {
-				return signupData.password !== signupData.passwordConfirmation
+			() =>
+				signupData.password &&
+				signupData.passwordConfirmation &&
+				signupData.password !== signupData.passwordConfirmation
 					? 'Salasanat eivät täsmää'
-					: '';
-			}
+					: ''
 		]
 	};
-	let validationErros = { passwordConfirmation: [] };
 	let loading = false;
 	let loginOk: boolean | undefined;
 	let signUp = false;
@@ -73,17 +56,22 @@
 	<LoginOkIndicator {loginOk} {loading} />
 	<LoadingIndicator show={loading} />
 
-	<form on:submit|preventDefault={() => (signUp ? validateSignup(signupData) : login())}>
+	<form on:submit|preventDefault={() => (signUp ? submitSignUp(signupData) : login())}>
 		<TextInput name="username" bind:value={signupData.username}>Käyttäjätunnus</TextInput>
-		<TextInput name="password" customType={inputType.PASSWORD} bind:value={signupData.password}
-			>Salasana</TextInput
+		<TextInput
+			name="password"
+			customType={inputType.PASSWORD}
+			bind:value={signupData.password}
+			validators={validators.passwordConfirmation}
+			on:updateValidation={(event) => setValidationState(event.detail)}>Salasana</TextInput
 		>
 
 		{#if signUp}
 			<TextInput
 				name="passwordConfirmation"
 				customType={inputType.PASSWORD}
-				validationErrors={validationErros.passwordConfirmation}
+				validators={validators.passwordConfirmation}
+				on:updateValidation={(event) => setValidationState(event.detail)}
 				bind:value={signupData.passwordConfirmation}>Salasana uudelleen</TextInput
 			>
 			<TextInput name="email" customType={inputType.EMAIL} bind:value={signupData.email}
@@ -91,13 +79,15 @@
 			>
 		{/if}
 
-		<CustomButton
-			customClass="cta"
-			customType={signUp ? 'submit' : 'button'}
-			on:click|once={() => (signUp = true)}>Luo tunnus</CustomButton
-		>
-		tai
-		<CustomButton customType="submit">Kirjaudu</CustomButton>
+		<div class="actions">
+			<CustomButton
+				customClass="cta"
+				customType={signUp ? 'submit' : 'button'}
+				on:click|once={() => (signUp = true)}>Luo tunnus</CustomButton
+			>
+			tai
+			<CustomButton customType="submit">Kirjaudu</CustomButton>
+		</div>
 	</form>
 </article>
 
@@ -108,5 +98,8 @@
 	}
 	form {
 		width: 100%;
+	}
+	.actions {
+		margin-top: 1.5em;
 	}
 </style>
