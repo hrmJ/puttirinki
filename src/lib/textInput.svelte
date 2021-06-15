@@ -3,7 +3,7 @@
 		PASSWORD = 'password',
 		EMAIL = 'email'
 	}
-	export type validatorFunction = () => string;
+	export type validatorFunction = (val?: string) => string;
 </script>
 
 <script lang="ts">
@@ -18,7 +18,7 @@
 		dispatch('updateValidation', { hasErrors: Boolean(errors.length), name });
 	};
 	const validate = async () => {
-		validationErrors = validators.map((validator) => validator()).filter(Boolean);
+		validationErrors = validators.map((validator) => validator(value)).filter(Boolean);
 		reportErrors(validationErrors);
 	};
 </script>
@@ -55,7 +55,7 @@
 	}
 	ul {
 		margin: 0;
-    margin-top: var(--margin-md);
+		margin-top: var(--margin-md);
 	}
 	li + li {
 		margin-top: var(--margin-sm);

@@ -30,9 +30,15 @@ export const setAuthToken = async (email: string, password: string): Promise<boo
 	return false;
 };
 
-export const submitSignUp = async (signupData: signupData): Promise<requestState> => {
-	console.log(signupData, 'hallo');
-	return null;
+export const submitSignUp = async (
+	validated: boolean,
+	signupData: signupData
+): Promise<requestState | null> => {
+	console.log('submittingg....');
+	if (!validated) {
+		return null;
+	}
+	console.log('GO!', signupData);
 	try {
 		const url = `http://${import.meta.env.VITE_API_URL}/users`;
 		const resp = await fetch(url, {
