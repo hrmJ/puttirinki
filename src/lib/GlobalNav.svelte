@@ -51,7 +51,7 @@
 		height: 100vh;
 		left: 0;
 		padding: 3.3rem 0em 0em 1em;
-		transition: width 0.2s linear;
+		transition: opacity 0.2s linear;
 		z-index: 2;
 		color: white;
 	}
