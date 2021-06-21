@@ -1,15 +1,11 @@
 <script lang="ts">
 	import CustomButton from '../lib/CustomButton.svelte';
-	import LoadingIndicator from '../lib/LoadingIndicator.svelte';
-	import LoginOkIndicator from '../lib/LoginOkIndicator.svelte';
-	import { setAuthToken, authStore, setUser, submitSignUp } from '../auth';
 	import TextInput, { inputType } from './textInput.svelte';
 	import type { signupData } from '../types';
-	import { requestState } from '../apiCalls';
 	import ResponseStatus from './ResponseStatus.svelte';
+	import { initiateLogin, initiateSignup } from '../login';
+	import loginForm from '../loginFormStore';
 
-	let loading = false;
-	let loginOk: boolean | undefined;
 	let signUp = false;
 	let errorMessage = '';
 	const validationErrors = {};
@@ -33,37 +29,6 @@
 				: ''
 	};
 
-	const processlogin = async (tokenOk: boolean): Promise<void> => {
-		if (!tokenOk) {
-			loading = false;
-			loginOk = false;
-			errorMessage = 'Kirjautuminen epäonnistui, yritä uudelleen.';
-			return null;
-		}
-		loginOk = true;
-		loading = false;
-		authStore.update(setUser);
-	};
-
-	const login = async (): Promise<void> => {
-		loading = true;
-		errorMessage = '';
-		const { username, password } = signupData;
-		const tokenOk = await setAuthToken(username, password);
-		processlogin(tokenOk);
-	};
-
-	const initiateSignup = async () => {
-		errorMessage = '';
-		loading = true;
-		const resp = await submitSignUp(validate(), signupData);
-		loading = false;
-		if (resp == requestState.COMPLETE) {
-			return await login();
-		}
-		errorMessage = 'Käyttäjätunnuksen luominen epäonnistui, yritä uudelleen.';
-	};
-
 	const setValidationState = ({ hasErrors, name }) => {
 		validationErrors[name] = hasErrors;
 	};
@@ -81,11 +46,16 @@
 		<h1>Pari detaljia vain...</h1>
 	{/if}
 
-	<ResponseStatus {errorMessage} />
+	<ResponseStatus errorMessage={$loginForm.errorMessage} />
 
-	<LoadingIndicator show={loading} />
+	{#if $loginForm.isLoading}
+		<p>LATAAA</p>
+	{/if}
 
-	<form on:submit|preventDefault={() => (signUp ? initiateSignup() : login())}>
+	<form
+		on:submit|preventDefault={() =>
+			signUp ? initiateSignup(validate, signupData) : initiateLogin(signupData)}
+	>
 		<TextInput name="username" bind:value={signupData.username} validators={[validators.notEmpty]}
 			>Käyttäjätunnus</TextInput
 		>
