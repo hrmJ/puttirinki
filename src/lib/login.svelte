@@ -6,10 +6,12 @@
 	import TextInput, { inputType } from './textInput.svelte';
 	import type { signupData } from '../types';
 	import { requestState } from '../apiCalls';
+	import ResponseStatus from './ResponseStatus.svelte';
 
 	let loading = false;
 	let loginOk: boolean | undefined;
 	let signUp = false;
+	let errorMessage = '';
 	const validationErrors = {};
 	const signupData: signupData = {
 		password: '',
@@ -35,6 +37,7 @@
 		if (!tokenOk) {
 			loading = false;
 			loginOk = false;
+			errorMessage = 'Kirjautuminen epäonnistui, yritä uudelleen.';
 			return null;
 		}
 		loginOk = true;
@@ -44,18 +47,21 @@
 
 	const login = async (): Promise<void> => {
 		loading = true;
+		errorMessage = '';
 		const { username, password } = signupData;
 		const tokenOk = await setAuthToken(username, password);
 		processlogin(tokenOk);
 	};
 
 	const initiateSignup = async () => {
+		errorMessage = '';
 		loading = true;
 		const resp = await submitSignUp(validate(), signupData);
 		loading = false;
 		if (resp == requestState.COMPLETE) {
-			await login();
+			return await login();
 		}
+		errorMessage = 'Käyttäjätunnuksen luominen epäonnistui, yritä uudelleen.';
 	};
 
 	const setValidationState = ({ hasErrors, name }) => {
@@ -75,8 +81,8 @@
 		<h1>Pari detaljia vain...</h1>
 	{/if}
 
-	<LoginOkIndicator {loginOk} {loading} />
-	<!-- <SignUpOkIndicator {loginOk} {loading} /> -->
+	<ResponseStatus {errorMessage} />
+
 	<LoadingIndicator show={loading} />
 
 	<form on:submit|preventDefault={() => (signUp ? initiateSignup() : login())}>
@@ -122,6 +128,10 @@
 </article>
 
 <style>
+	:global(article + article) {
+		margin-top: 1em;
+	}
+
 	article {
 		margin: auto;
 		width: 80vw;
