@@ -48,7 +48,7 @@
 		position: fixed;
 		top: 0rem;
 		max-width: 300px;
-		height: calc(100vh - 3.5rem);
+		height: 100vh;
 		left: 0;
 		padding: 3.3rem 0em 0em 1em;
 		transition: width 0.2s linear;

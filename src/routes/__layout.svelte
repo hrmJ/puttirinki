@@ -7,7 +7,6 @@
 	import GlobalNav from '$lib/GlobalNav.svelte';
 	import Login from '$lib/login.svelte';
 	import LoadingIndicator from '$lib/LoadingIndicator.svelte';
-	import { debug } from 'svelte/internal';
 	let total = 0;
 	let user: Pick<User, '_id' | 'name'> | null;
 	hitStore.subscribe((score) => {

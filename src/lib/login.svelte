@@ -5,6 +5,7 @@
 	import { setAuthToken, authStore, setUser, submitSignUp } from '../auth';
 	import TextInput, { inputType } from './textInput.svelte';
 	import type { signupData } from '../types';
+	import { requestState } from '../apiCalls';
 
 	let loading = false;
 	let loginOk: boolean | undefined;
@@ -40,11 +41,21 @@
 		loading = false;
 		authStore.update(setUser);
 	};
+
 	const login = async (): Promise<void> => {
 		loading = true;
 		const { username, password } = signupData;
 		const tokenOk = await setAuthToken(username, password);
 		processlogin(tokenOk);
+	};
+
+	const initiateSignup = async () => {
+		loading = true;
+		const resp = await submitSignUp(validate(), signupData);
+		loading = false;
+		if (resp == requestState.COMPLETE) {
+			await login();
+		}
 	};
 
 	const setValidationState = ({ hasErrors, name }) => {
@@ -65,9 +76,10 @@
 	{/if}
 
 	<LoginOkIndicator {loginOk} {loading} />
+	<!-- <SignUpOkIndicator {loginOk} {loading} /> -->
 	<LoadingIndicator show={loading} />
 
-	<form on:submit|preventDefault={() => (signUp ? submitSignUp(validate(), signupData) : login())}>
+	<form on:submit|preventDefault={() => (signUp ? initiateSignup() : login())}>
 		<TextInput name="username" bind:value={signupData.username} validators={[validators.notEmpty]}
 			>Käyttäjätunnus</TextInput
 		>

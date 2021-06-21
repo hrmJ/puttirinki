@@ -12,7 +12,7 @@ const authenticateByResponse = async (resp: Response): Promise<boolean> => {
 	return true;
 };
 
-export const setAuthToken = async (email: string, password: string): Promise<boolean> => {
+export const setAuthToken = async (username: string, password: string): Promise<boolean> => {
 	try {
 		const url = `http://${import.meta.env.VITE_API_URL}/authentication`;
 		const resp = await fetch(url, {
@@ -21,7 +21,7 @@ export const setAuthToken = async (email: string, password: string): Promise<boo
 			headers: {
 				'content-type': 'application/json'
 			},
-			body: JSON.stringify({ strategy: 'local', email, password })
+			body: JSON.stringify({ strategy: 'local', username, password })
 		});
 		return authenticateByResponse(resp);
 	} catch (error) {
@@ -34,11 +34,9 @@ export const submitSignUp = async (
 	validated: boolean,
 	signupData: signupData
 ): Promise<requestState | null> => {
-	console.log('submittingg....');
 	if (!validated) {
 		return null;
 	}
-	console.log('GO!', signupData);
 	try {
 		const url = `http://${import.meta.env.VITE_API_URL}/users`;
 		const resp = await fetch(url, {
