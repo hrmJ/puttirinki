@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 import { processResponse, requestState } from './apiCalls';
 import type { AuthResponse, signupData, User } from './types';
+import { browser } from '$app/env';
 
 const authenticateByResponse = async (resp: Response): Promise<boolean> => {
 	if (!resp.ok) {
@@ -65,6 +66,9 @@ const processUserResponse = (
 };
 
 const getCurrentUserDetails = async (): Promise<Pick<User, '_id' | 'name'> | null> => {
+	if (!browser) {
+		return null;
+	}
 	const id = localStorage.getItem('userID');
 	let resp: Response | null;
 	let user: Pick<User, '_id' | 'name'> | null;
