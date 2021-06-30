@@ -15,7 +15,7 @@ const authenticateByResponse = async (resp: Response): Promise<boolean> => {
 
 export const setAuthToken = async (username: string, password: string): Promise<boolean> => {
 	try {
-		const url = `http://${import.meta.env.VITE_API_URL}/authentication`;
+		const url = `${import.meta.env.VITE_API_URL}/authentication`;
 		const resp = await fetch(url, {
 			method: 'POST',
 			mode: 'cors',
@@ -39,7 +39,7 @@ export const submitSignUp = async (
 		return null;
 	}
 	try {
-		const url = `http://${import.meta.env.VITE_API_URL}/users`;
+		const url = `${import.meta.env.VITE_API_URL}/users`;
 		const resp = await fetch(url, {
 			method: 'POST',
 			mode: 'cors',
@@ -73,7 +73,7 @@ const getCurrentUserDetails = async (): Promise<Pick<User, '_id' | 'name'> | nul
 	let resp: Response | null;
 	let user: Pick<User, '_id' | 'name'> | null;
 	try {
-		const url = `http://${import.meta.env.VITE_API_URL}/users/${id}`;
+		const url = `${import.meta.env.VITE_API_URL}/users/${id}`;
 		resp = await fetch(url, {
 			headers: {
 				'content-type': 'application/json',

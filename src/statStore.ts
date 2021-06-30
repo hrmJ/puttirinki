@@ -17,7 +17,7 @@ const compileStats = async (resp: Response | string): Promise<SessionStats> => {
 };
 
 const fetchStats = async (): Promise<Response> => {
-	const url = `http://${import.meta.env.VITE_API_URL}/practiceSessions`;
+	const url = `${import.meta.env.VITE_API_URL}/practiceSessions`;
 	return await fetch(url, {
 		headers: {
 			'content-type': 'application/json',

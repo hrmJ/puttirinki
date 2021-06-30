@@ -24,7 +24,7 @@ const { subscribe, update, set } = writable({ ...defaultVal } as hitStoreContent
 
 const saveSession = async (hits: hitStoreContent): Promise<requestState> => {
 	try {
-		const url = `http://${import.meta.env.VITE_API_URL}/practiceSessions`;
+		const url = `${import.meta.env.VITE_API_URL}/practiceSessions`;
 		const resp = await fetch(url, {
 			headers: {
 				'content-type': 'application/json',
