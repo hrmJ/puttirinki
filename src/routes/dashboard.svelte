@@ -54,12 +54,6 @@
 </main>
 
 <style>
-	main {
-		padding: var(--padding-lg);
-		font-weight: var(--weight-light);
-		font-size: var(--font-sm-1);
-		line-height: 1.4;
-	}
 	article {
 		border-radius: 3px;
 	}

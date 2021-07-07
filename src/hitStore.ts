@@ -8,6 +8,7 @@ export type hitStoreContent = {
 	top: number;
 	bottom: number;
 	hit: number;
+	distance: number;
 	showStats: boolean;
 };
 
@@ -17,6 +18,7 @@ const defaultVal = {
 	top: 0,
 	bottom: 0,
 	hit: 0,
+	distance: 3,
 	showStats: false
 };
 
@@ -47,6 +49,7 @@ export const hitStore = {
 	addTop: (): void => update((hits) => ({ ...hits, top: hits.top + 1 })),
 	addBottom: (): void => update((hits) => ({ ...hits, bottom: hits.bottom + 1 })),
 	addHit: (): void => update((hits) => ({ ...hits, hit: hits.hit + 1 })),
+	updateDistance: (distance: number): void => update((hits) => ({ ...hits, distance })),
 	toggleStats: (showStats: boolean): void => update((hits) => ({ ...hits, showStats })),
 	saveSession: async (): Promise<requestState> => {
 		const resp = await saveSession(currentHits);

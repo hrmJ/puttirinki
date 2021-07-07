@@ -7,13 +7,8 @@
 	import GlobalNav from '$lib/GlobalNav.svelte';
 	import Login from '$lib/login.svelte';
 	import LoadingIndicator from '$lib/LoadingIndicator.svelte';
-	let total = 0;
+	import PracticeBar from '$lib/PracticeBar.svelte';
 	let user: Pick<User, '_id' | 'name'> | null;
-	hitStore.subscribe((score) => {
-		total = Object.entries(score)
-			.filter(([key, val]) => key !== 'showStats')
-			.reduce((prev, cur) => prev + (cur[1] as number), 0);
-	});
 	authStore.subscribe(async (userPromise) => {
 		user = await userPromise;
 	});
@@ -23,26 +18,32 @@
 	};
 </script>
 
-<div class={'menu-launcher ' + (user  == null ? 'hide' : '')}>
+<div class={'menu-launcher ' + (user == null ? 'hide' : '')}>
 	<CustomButton customClass="no-outline" on:click={toggleNav}
 		><MenuIcon color="white" /></CustomButton
 	>
 </div>
 <header>
-	{#if $hitStore.showStats && user !== null}
-		<p>{$hitStore.hit} / {total}</p>
-	{/if}
+	<PracticeBar {user} />
 	<GlobalNav {toggleNav} {showNav} {user} />
 </header>
-{#if user === undefined}
-	<LoadingIndicator show />
-{:else if user === null}
-	<Login />
-{:else}
-	<slot />
-{/if}
+<main>
+	{#if user === undefined}
+		<LoadingIndicator show />
+	{:else if user === null}
+		<Login />
+	{:else}
+		<slot />
+	{/if}
+</main>
 
 <style>
+	:global(main) {
+		padding: var(--padding-lg);
+		font-weight: var(--weight-light);
+		font-size: var(--font-sm-1);
+		line-height: 1.4;
+	}
 	div.menu-launcher.hide {
 		display: none;
 	}
