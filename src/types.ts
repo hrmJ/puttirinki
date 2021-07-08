@@ -61,3 +61,9 @@ export interface signupData {
 	username: string;
 	email: string;
 }
+
+export enum comparisonOperator {
+	GT = '>',
+	LT = '<',
+	EQ = '='
+}

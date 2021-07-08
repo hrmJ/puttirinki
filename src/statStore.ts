@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { SessionStats } from './types';
+import type { comparisonOperator, SessionStats } from './types';
 import { handleFetchError, handleResponseOrErrorString, requestState } from './apiCalls';
 
 export type statStoreContent = {
@@ -16,8 +16,10 @@ const compileStats = async (resp: Response | string): Promise<SessionStats> => {
 	return sessionResponse;
 };
 
-const fetchStats = async (): Promise<Response> => {
-	const url = `${import.meta.env.VITE_API_URL}/practiceSessions`;
+const fetchStats = async (distance?: number, operator?: comparisonOperator): Promise<Response> => {
+	const url = `${
+		import.meta.env.VITE_API_URL
+	}/practiceSessions?distance=${distance}&operator=${encodeURI(operator)}`;
 	return await fetch(url, {
 		headers: {
 			'content-type': 'application/json',
@@ -27,8 +29,11 @@ const fetchStats = async (): Promise<Response> => {
 	});
 };
 
-export const initializeStore = async (): Promise<statStoreContent> => {
-	const resp = await fetchStats().catch(handleFetchError);
+export const initializeStore = async (
+	distance?: number,
+	operator?: comparisonOperator
+): Promise<statStoreContent> => {
+	const resp = await fetchStats(distance, operator).catch(handleFetchError);
 	const ret = { data: await compileStats(resp), ...handleResponseOrErrorString(resp) };
 	return ret;
 };
