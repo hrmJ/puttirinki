@@ -23,6 +23,7 @@ const config = {
 			server: {
 				hmr: {
 					protocol: 'ws',
+					host: '192.168.8.113',
 					port: 3001
 				}
 			}

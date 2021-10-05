@@ -53,6 +53,7 @@ export const hitStore = {
 	toggleStats: (showStats: boolean): void => update((hits) => ({ ...hits, showStats })),
 	saveSession: async (): Promise<requestState> => {
 		const resp = await saveSession(currentHits);
+		console.log(currentHits);
 		statsStore.update(initializeStore);
 		set({ ...defaultVal, showStats: true });
 		return resp;

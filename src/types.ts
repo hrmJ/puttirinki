@@ -5,6 +5,7 @@ export interface SessionStats {
 	bottom: number;
 	hit: number;
 	total: number;
+	distance?: number;
 	sessionCount: number;
 }
 
@@ -63,7 +64,7 @@ export interface signupData {
 }
 
 export enum comparisonOperator {
-	GT = '>',
-	LT = '<',
-	EQ = '='
+	GT = '$gt',
+	LT = '$lt',
+	EQ = '$eq'
 }
